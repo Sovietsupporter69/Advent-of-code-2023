@@ -1,5 +1,5 @@
 ﻿// BEFORE RUN TIME PREP
-string fileLocations = "C:\\Users\\hibfu\\source\\repos\\Advent-of-code-2023\\Advent-of-code-2023\\";
+string fileLocations = "C:\\Users\\Student\\Source\\Repos\\Sovietsupporter69\\Advent-of-code-2023\\Advent-of-code-2023\\";
 string[][] in1 = new string[2][];
 for (int i = 1; i <= in1.Length; i++) { in1[i-1] = File.ReadAllLines(fileLocations + "Input_"+i+".txt"); } //load all input data
 char[][] alphabeticalNumbers = new char[10][] { ['z','e','r','o'], ['o','n','e'], ['t','w','o'], ['t','h','r','e','e'], ['f','o','u','r'], ['f','i','v','e'], ['s','i','x'], ['s','e','v','e','n'], ['e','i','g','h','t'], ['n','i','n','e'] };
@@ -55,7 +55,7 @@ void Day2() {
                 }
                 if (int.Parse(splitCubes[1]) > tester) { goto Exit; } // if cube count is to big end game all together
             }
-            if (j == Grabs[j].Length - 2) {
+            if (j == Grabs.Length - 2) {
                 runningTotal += i+1; //keep running total of the games that pass
             }
         }
