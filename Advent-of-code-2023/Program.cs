@@ -1,6 +1,6 @@
 ﻿// BEFORE RUN TIME PREP
 string fileLocations = "C:\\Users\\Student\\Source\\Repos\\Sovietsupporter69\\Advent-of-code-2023\\Advent-of-code-2023\\";
-string[][] input = new string[2][];
+string[][] input = new string[3][];
 for (int i = 1; i <= input.Length; i++) { input[i-1] = File.ReadAllLines(fileLocations + "Input_"+i+".txt"); } //load all input data
 char[][] alphabeticalNumbers = new char[10][] { ['z','e','r','o'], ['o','n','e'], ['t','w','o'], ['t','h','r','e','e'], ['f','o','u','r'], ['f','i','v','e'], ['s','i','x'], ['s','e','v','e','n'], ['e','i','g','h','t'], ['n','i','n','e'] };
 
@@ -81,5 +81,31 @@ void Day2() {
 }
 
 void Day3() {
-
+    for (int i = 0; i < input[3].Length; i++) {
+        for (int j = 0; j < input[3][i].Length; j++) {
+            if (input[3][i][j] != '.' && !char.IsDigit(input[3][i][j])) {
+                for (int k = -1; k <= 1; k++) {
+                    for (int l = -1; l <= 1; l++){
+                        try {
+                            if (char.IsDigit(input[3][i + k][j + l])) {
+                                int o = -1; List<char> numLength = new List<char>();
+                                while (true) {
+                                    if (char.IsDigit(input[3][i + k][j + l + o])) {
+                                        o--;
+                                    }
+                                    else {
+                                        o++;
+                                        numLength.Add(input[3][i + k][j + l + o]);
+                                        if (char.IsDigit(input[3][i + k][j + l + o + numLength.Count])) {
+                                            numLength.Add(input[3][i + k][j + l + o + numLength.Count]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
