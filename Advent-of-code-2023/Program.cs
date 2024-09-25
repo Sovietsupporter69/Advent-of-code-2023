@@ -81,31 +81,59 @@ void Day2() {
 }
 
 void Day3() {
-    for (int i = 0; i < input[3].Length; i++) {
-        for (int j = 0; j < input[3][i].Length; j++) {
-            if (input[3][i][j] != '.' && !char.IsDigit(input[3][i][j])) {
-                for (int k = -1; k <= 1; k++) {
-                    for (int l = -1; l <= 1; l++){
-                        try {
-                            if (char.IsDigit(input[3][i + k][j + l])) {
-                                int o = -1; List<char> numLength = new List<char>();
-                                while (true) {
-                                    if (char.IsDigit(input[3][i + k][j + l + o])) {
-                                        o--;
-                                    }
-                                    else {
-                                        o++;
-                                        numLength.Add(input[3][i + k][j + l + o]);
-                                        if (char.IsDigit(input[3][i + k][j + l + o + numLength.Count])) {
-                                            numLength.Add(input[3][i + k][j + l + o + numLength.Count]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+    char[][] alteredInput =  new char[input[2].Length+2][];
+    for (int x = 0; x < alteredInput.Length; x++) {
+        if (x == 0 || x == alteredInput.Length - 1) {
+            alteredInput[x] = new char[input[0].Length];
+            for (int g = 0; g < alteredInput[x].Length; g++) { alteredInput[x][g] = 'X'; }
+        } else {
+            alteredInput[x] = new char[input[2][x-1].Length + 2];
+            for (int y = 0; y < alteredInput[x].Length; y++) {
+                if (y == 0 || y == alteredInput[x].Length - 1) {
+                    alteredInput[x][y] = 'X';
+                } else {
+                    alteredInput[x][y] = input[2][x-1][y-1];
                 }
             }
         }
     }
+    int RunningTotal = 0;
+    for (int i = 1; i < alteredInput.Length-1; i++) {
+        for (int j = 1; j < alteredInput[i].Length-1; j++) {
+            if (char.IsDigit(alteredInput[i][j])) {
+                List<char> numSequencer = new List<char>() { alteredInput[i][j] };
+                string makingNumber = "";
+                while (true) {
+                    if (numSequencer.Count + j <= alteredInput[i].Length-1 && char.IsDigit(alteredInput[i][j + numSequencer.Count])) {
+                        numSequencer.Add(alteredInput[i][j + numSequencer.Count]);
+                    }
+                    else {
+                        if (findSymbol(i, j, numSequencer.Count, alteredInput)) {
+                            makingNumber += numSequencer[0];
+                            for (int k = 1; k < numSequencer.Count; k++) {
+                                makingNumber += numSequencer[k];
+                            }
+                            RunningTotal += int.Parse(makingNumber);
+                            if (makingNumber == "319") { Console.WriteLine("Works"); }
+                        }
+                        break;
+                    }
+                }
+                j += numSequencer.Count;
+            }
+        }
+    }
+    Console.WriteLine(RunningTotal);
+}
+
+bool findSymbol(int x, int y, int checkLength, char[][] input)
+{
+    for (int k = -1; k <= 1; k++) {
+        for (int l = -1; l < checkLength; l++) {
+            if (!char.IsDigit(input[x + k][y + l]) && input[x + k][y + l] != '.') {
+                return true;
+            }
+        }
+    }
+    return false;
 }
