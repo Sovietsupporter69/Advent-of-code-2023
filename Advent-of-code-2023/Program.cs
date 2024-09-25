@@ -1,4 +1,6 @@
 ﻿// BEFORE RUN TIME PREP
+using System.Linq;
+
 string fileLocations = "C:\\Users\\Student\\Source\\Repos\\Sovietsupporter69\\Advent-of-code-2023\\Advent-of-code-2023\\";
 string[][] input = new string[3][];
 for (int i = 1; i <= input.Length; i++) { input[i-1] = File.ReadAllLines(fileLocations + "Input_"+i+".txt"); } //load all input data
@@ -7,6 +9,7 @@ char[][] alphabeticalNumbers = new char[10][] { ['z','e','r','o'], ['o','n','e']
 //Day1();
 //Day2();
 Day3();
+//Day4();
 
 // DAY 1
 void Day1() {
@@ -80,24 +83,26 @@ void Day2() {
     Console.WriteLine(Total_2);
 }
 
+//DAY 3
 void Day3() {
     char[][] alteredInput =  new char[input[2].Length+2][];
     for (int x = 0; x < alteredInput.Length; x++) {
         if (x == 0 || x == alteredInput.Length - 1) {
             alteredInput[x] = new char[input[0].Length];
-            for (int g = 0; g < alteredInput[x].Length; g++) { alteredInput[x][g] = 'X'; }
+            for (int g = 0; g < alteredInput[x].Length; g++) { alteredInput[x][g] = '.'; }
         } else {
             alteredInput[x] = new char[input[2][x-1].Length + 2];
             for (int y = 0; y < alteredInput[x].Length; y++) {
                 if (y == 0 || y == alteredInput[x].Length - 1) {
-                    alteredInput[x][y] = 'X';
+                    alteredInput[x][y] = '.';
                 } else {
                     alteredInput[x][y] = input[2][x-1][y-1];
                 }
             }
         }
     }
-    int RunningTotal = 0;
+    int RunningTotal_1 = 0; int RunningTotal_2 = 0;
+    List<string[]> multiplyNumbers = new List<string[]>();
     for (int i = 1; i < alteredInput.Length-1; i++) {
         for (int j = 1; j < alteredInput[i].Length-1; j++) {
             if (char.IsDigit(alteredInput[i][j])) {
@@ -108,32 +113,64 @@ void Day3() {
                         numSequencer.Add(alteredInput[i][j + numSequencer.Count]);
                     }
                     else {
-                        if (findSymbol(i, j, numSequencer.Count, alteredInput)) {
-                            makingNumber += numSequencer[0];
-                            for (int k = 1; k < numSequencer.Count; k++) {
-                                makingNumber += numSequencer[k];
+                        for (int k = -1; k <= 1; k++) {
+                            for (int l = -1; l < numSequencer.Count + 1; l++) {
+                                if (!char.IsDigit(alteredInput[i + k][j + l]) && alteredInput[i + k][j + l] != '.') {
+                                    bool multiply = false;
+                                    if (alteredInput[i + k][j + l] == '*') {
+                                        int numCount = 0;
+                                        for (int m = -1; m <= 1; m++) {
+                                            bool foundNum = false;
+                                            for (int g = -1; g <= 1; g++) {
+                                                if (char.IsDigit(alteredInput[i + k + m][j + l + g])) {
+                                                    if (!foundNum) {
+                                                        numCount++;
+                                                        foundNum = true;
+                                                    }
+                                                } else {
+                                                    foundNum = false;
+                                                }
+                                            }
+                                        }
+                                        if (numCount == 2) {
+                                            multiply = true;
+                                        }
+                                    }
+
+                                    makingNumber += numSequencer[0];
+                                    for (int d = 1; d < numSequencer.Count; d++)
+                                    {
+                                        makingNumber += numSequencer[d];
+                                    }
+                                    RunningTotal_1 += int.Parse(makingNumber);
+                                    if (!multiply) { RunningTotal_2 += int.Parse(makingNumber); }
+                                    else {
+                                        for (int d = 1; d < multiplyNumbers.Count; d++) {
+                                            if (multiplyNumbers[d] == new string[2] { i.ToString(), j.ToString() }) {
+                                                RunningTotal_2 += int.Parse(makingNumber) * int.Parse(multiplyNumbers[d + 1][0]);
+                                            }
+                                            if (d == multiplyNumbers.Count - 1) {
+                                                multiplyNumbers.Add(new string[2] { i.ToString(), j.ToString() });
+                                                multiplyNumbers.Add(new string[1] { makingNumber });
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            RunningTotal += int.Parse(makingNumber);
-                            if (makingNumber == "319") { Console.WriteLine("Works"); }
                         }
                         break;
                     }
                 }
-                j += numSequencer.Count;
+                j += numSequencer.Count-1;
             }
         }
     }
-    Console.WriteLine(RunningTotal);
+    Console.WriteLine(RunningTotal_1);
+    Console.WriteLine(RunningTotal_2);
 }
 
-bool findSymbol(int x, int y, int checkLength, char[][] input)
+//DAY 4
+void Day4()
 {
-    for (int k = -1; k <= 1; k++) {
-        for (int l = -1; l < checkLength; l++) {
-            if (!char.IsDigit(input[x + k][y + l]) && input[x + k][y + l] != '.') {
-                return true;
-            }
-        }
-    }
-    return false;
+
 }
