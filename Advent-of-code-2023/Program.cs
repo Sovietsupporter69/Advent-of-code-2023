@@ -101,6 +101,8 @@ void Day3() {
             }
         }
     }
+
+    int multiplys = 0;
     int RunningTotal_1 = 0; int RunningTotal_2 = 0;
     List<string[]> multiplyNumbers = new List<string[]>();
     for (int i = 1; i < alteredInput.Length-1; i++) {
@@ -145,14 +147,23 @@ void Day3() {
                                     RunningTotal_1 += int.Parse(makingNumber);
                                     if (!multiply) { RunningTotal_2 += int.Parse(makingNumber); }
                                     else {
-                                        for (int d = 1; d < multiplyNumbers.Count; d++) {
-                                            if (multiplyNumbers[d] == new string[2] { i.ToString(), j.ToString() }) {
-                                                RunningTotal_2 += int.Parse(makingNumber) * int.Parse(multiplyNumbers[d + 1][0]);
+                                        if (multiplyNumbers.Count == 0) {
+                                            for (int d = 0; d < multiplyNumbers.Count; d++) {
+                                                Console.WriteLine(2);
+                                                if (multiplyNumbers[d] == new string[2] { i.ToString(), j.ToString() }) {
+                                                    RunningTotal_2 += int.Parse(makingNumber) * int.Parse(multiplyNumbers[d + 1][0]);
+                                                    multiplyNumbers.RemoveAt(d); multiplyNumbers.RemoveAt(d + 1);
+                                                }
+                                                if (d == multiplyNumbers.Count - 1) {
+                                                    multiplyNumbers.Add(new string[2] { i.ToString(), j.ToString() });
+                                                    multiplyNumbers.Add(new string[1] { makingNumber });
+                                                    Console.WriteLine(3);
+                                                }
                                             }
-                                            if (d == multiplyNumbers.Count - 1) {
-                                                multiplyNumbers.Add(new string[2] { i.ToString(), j.ToString() });
-                                                multiplyNumbers.Add(new string[1] { makingNumber });
-                                            }
+                                        } else {
+                                            multiplyNumbers.Add(new string[2] { i.ToString(), j.ToString() });
+                                            multiplyNumbers.Add(new string[1] { makingNumber });
+                                            Console.WriteLine(4);
                                         }
                                     }
                                 }
@@ -167,6 +178,8 @@ void Day3() {
     }
     Console.WriteLine(RunningTotal_1);
     Console.WriteLine(RunningTotal_2);
+    Console.WriteLine(multiplyNumbers.Count);
+    Console.WriteLine(multiplys);
 }
 
 //DAY 4
